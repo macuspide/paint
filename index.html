@@ -31,15 +31,9 @@
         <a-entity class="link" id="link"
           geometry="primitive: plane; height: 1; width: 2;"
           material="shader: flat; src: ${thumb}"
-          event-set__1="_event: mouseenter; material.opacity: 0.5;"
-          event-set__2="_event: mouseleave; material.opacity: 1;"
-          event-set__1="_event: mouseup; material.opacity: 0.5;"
-          event-set__2="_event: mousedown; material.opacity: 1;"
+          event-set__1="_event: mouseenter; material.opacity:0.5"
+          event-set__2="_event: mouseleave; material.opacity:1"
           cambia-imagen="on: click; target: #sky; src: ${src}">
-
-
-          <a-animation begin="mouseenter" attribute="position" from="0 0 0" to="0 0 2" dur="1000">
-          <a-animation begin="cursor-fusing" attribute="position" from="0 0 2" to="0 0 7" dur="1000">
 
         </a-entity>
       </script>
@@ -62,7 +56,7 @@
         on: {type: 'string'},
         target: {type: 'selector'},
         src: {type: 'string'},
-        dur: {type: 'number', default: 100}
+        dur: {type: 'number', default: 10}
       },
 
       init: function () {
@@ -74,7 +68,7 @@
           setTimeout(function () {
             // Set image.
             data.target.setAttribute('material', 'src', data.src);
-          }, data.dur);
+          }, 1);
         });
       },
 
