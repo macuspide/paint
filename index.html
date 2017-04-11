@@ -1,61 +1,66 @@
-<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <title>360&deg; Image Gallery</title>
-    <meta name="description" content="360&deg; Image Gallery - A-Frame">
+    <title>Paint Room</title>
+    <meta name="description" content="Panorama — A-Frame">
     <script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
     <script src="https://npmcdn.com/aframe-animation-component@3.0.1"></script>
     <script src="https://npmcdn.com/aframe-event-set-component@3.0.1"></script>
     <script src="https://npmcdn.com/aframe-layout-component@3.0.1"></script>
     <script src="https://npmcdn.com/aframe-template-component@3.1.1"></script>
     <script src="components/set-image.js"></script>
-  </head>
-  <body>
-    <a-scene>
-      <a-assets>
-        <img id="city" crossorigin="anonymous" src="https://raw.githubusercontent.com/olatze/360/master/33008352661_b41d167508_k.jpg">
-        <img id="city-thumb" crossorigin="anonymous" src="https://raw.githubusercontent.com/olatze/360/master/thumb-ciencia.jpg">
-        <img id="cubes-thumb" crossorigin="anonymous" src="https://raw.githubusercontent.com/olatze/360/master/thumb-moda.jpg">
-        <img id="sechelt-thumb" crossorigin="anonymous" src="https://raw.githubusercontent.com/olatze/360/master/thumb-acuarium.jpg">
-        <audio id="click-sound" crossorigin="anonymous" src="https://cdn.aframe.io/360-image-gallery-boilerplate/audio/click.ogg"></audio>
-        <img id="cubes" crossorigin="anonymous" src="https://raw.githubusercontent.com/olatze/360/master/30876470680_752bbc4b26_k.jpg">
-        <img id="sechelt" crossorigin="anonymous" src="https://raw.githubusercontent.com/olatze/360/master/31015980151_63215a1600_k.jpg">
 
-        <!-- Image link template to be reused. -->
+
+    <!-- Image link template to be reused. -->
         <script id="link" type="text/html">
           <a-entity class="link"
-            geometry="primitive: plane; height: 1; width: 1"
+            geometry="primitive: plane; height: 1; width: 2"
             material="shader: flat; src: ${thumb}"
             event-set__1="_event: mousedown; scale: 1 1 1"
             event-set__2="_event: mouseup; scale: 1.2 1.2 1"
             event-set__3="_event: mouseenter; scale: 1.2 1.2 1"
             event-set__4="_event: mouseleave; scale: 1 1 1"
-            set-image="on: click; target: #image-360; src: ${src}"
-            sound="on: click; src: #click-sound"></a-entity>
+            set-image="on: click; target: #image-360; src: ${src}"></a-entity>
         </script>
-      </a-assets>
+  </head>
+  <body>
+    <a-scene>
 
-      <!-- 360-degree image. -->
-      <a-sky id="image-360" radius="10" src="#city"></a-sky>
+      <a-camera>
+        <a-cursor fuse="true"></a-cursor>
+      </a-camera>
+
+      <a-assets>
+        <img id="sky" src="images/normal.jpg">
+        <img id="roomAzul" src="images/azul.jpg">
+
+        <img id="botonAzul" src="images/botonAzul.png">
+
+
+      </a-assets>
+      <a-sky src="#sky"></a-sky>
 
       <!-- Image links. -->
-      <a-entity id="links" layout="type: line; margin: 1.5" position="0 -1 -4">
-        <a-entity template="src: #link" data-src="#cubes" data-thumb="#cubes-thumb"></a-entity>
-        <a-entity template="src: #link" data-src="#city" data-thumb="#city-thumb"></a-entity>
-        <a-entity template="src: #link" data-src="#sechelt" data-thumb="#sechelt-thumb"></a-entity>
-      </a-entity>
+<a-entity id="links" cursor-listener layout="type: line; margin: 1.5" position="-2 3 -6">
+  <a-entity data-src="#botonAzul" data-thumb="#botonAzul"></a-entity>
+  <a-entity template="src: #link" data-src="#roomAzul" data-thumb="#botonAzul"></a-entity>
 
-      <!-- Camera + cursor. -->
-      <a-entity camera look-controls>
-        <a-cursor id="cursor"
-          animation__click="property: scale; startEvents: click; from: 0.1 0.1 0.1; to: 1 1 1; dur: 150"
-          animation__fusing="property: fusing; startEvents: fusing; from: 1 1 1; to: 0.1 0.1 0.1; dur: 1500"
-          event-set__1="_event: mouseenter; color: springgreen"
-          event-set__2="_event: mouseleave; color: black"
-          fuse="true"
-          raycaster="objects: .link"></a-cursor>
-      </a-entity>
+</a-entity>
     </a-scene>
+
+    <script>
+    // Component to change to random color on click.
+    AFRAME.registerComponent('cursor-listener', {
+      init: function () {
+
+        this.el.addEventListener('click', function (evt) {
+          var fondo = document.getElementById("sky");
+          fondo.setAttribute('src', 'images/azul.jpg');
+          console.log(document.getElementById("sky").src);
+        });
+      }
+    });
+    </script>
   </body>
+
 </html>
