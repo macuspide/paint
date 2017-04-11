@@ -3,63 +3,95 @@
     <meta charset="utf-8">
     <title>Paint Room</title>
     <meta name="description" content="Panorama — A-Frame">
-    <script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>
+    <script src="js/aframe-master.js"></script>
     <script src="https://npmcdn.com/aframe-animation-component@3.0.1"></script>
     <script src="https://npmcdn.com/aframe-event-set-component@3.0.1"></script>
     <script src="https://npmcdn.com/aframe-layout-component@3.0.1"></script>
     <script src="https://npmcdn.com/aframe-template-component@3.1.1"></script>
-    <script src="components/set-image.js"></script>
-
-
-    <!-- Image link template to be reused. -->
-        <script id="link" type="text/html">
-          <a-entity class="link"
-            geometry="primitive: plane; height: 1; width: 2"
-            material="shader: flat; src: ${thumb}"
-            event-set__1="_event: mousedown; scale: 1 1 1"
-            event-set__2="_event: mouseup; scale: 1.2 1.2 1"
-            event-set__3="_event: mouseenter; scale: 1.2 1.2 1"
-            event-set__4="_event: mouseleave; scale: 1 1 1"
-            set-image="on: click; target: #image-360; src: ${src}"></a-entity>
-        </script>
   </head>
   <body>
     <a-scene>
 
-      <a-camera>
-        <a-cursor fuse="true"></a-cursor>
-      </a-camera>
-
       <a-assets>
-        <img id="sky" src="images/normal.jpg">
         <img id="roomAzul" src="images/azul.jpg">
+        <img id="roomRosa" src="images/rosa.jpg">
 
-        <img id="botonAzul" src="images/botonAzul.png">
-
-
+        <img id="azul-thumb" src="images/botonAzul.png">
+        <img id="rosa-thumb" src="images/botonRosa.png">
       </a-assets>
-      <a-sky src="#sky"></a-sky>
 
-      <!-- Image links. -->
-<a-entity id="links" cursor-listener layout="type: line; margin: 1.5" position="-2 3 -6">
-  <a-entity data-src="#botonAzul" data-thumb="#botonAzul"></a-entity>
-  <a-entity template="src: #link" data-src="#roomAzul" data-thumb="#botonAzul"></a-entity>
+      <a-sky id="sky" src="#roomAzul"></a-sky>
 
-</a-entity>
+      <a-entity id="links" cursor-listener layout="type: line; margin: 2.5" position="-1.2 1 -6">
+        <a-entity template="src: #link" data-src="#roomAzul" data-thumb="#azul-thumb"></a-entity>
+        <a-entity template="src: #link" data-src="#roomRosa" data-thumb="#rosa-thumb"></a-entity>
+      </a-entity>
+
+      <script id="link" type="text/html">
+        <a-entity class="link" id="link"
+          geometry="primitive: plane; height: 1; width: 2;"
+          material="shader: flat; src: ${thumb}"
+          event-set__1="_event: mouseenter; material.opacity: 0.5;"
+          event-set__2="_event: mouseleave; material.opacity: 1;"
+          event-set__1="_event: mouseup; material.opacity: 0.5;"
+          event-set__2="_event: mousedown; material.opacity: 1;"
+          cambia-imagen="on: click; target: #sky; src: ${src}">
+
+
+          <a-animation begin="mouseenter" attribute="position" from="0 0 0" to="0 0 2" dur="1000">
+          <a-animation begin="cursor-fusing" attribute="position" from="0 0 2" to="0 0 7" dur="1000">
+
+        </a-entity>
+      </script>
+
+      <a-entity camera look-controls>
+        <a-cursor id="cursor"
+          event-set__1="_event: mouseenter; color: white"
+          event-set__2="_event: mouseleave; color: black"
+          fuse="true"
+          raycaster="objects: .link"></a-cursor>
+      </a-entity>
+
     </a-scene>
 
     <script>
-    // Component to change to random color on click.
-    AFRAME.registerComponent('cursor-listener', {
+
+    //Cambia imagen de fondo
+    AFRAME.registerComponent('cambia-imagen', {
+      schema: {
+        on: {type: 'string'},
+        target: {type: 'selector'},
+        src: {type: 'string'},
+        dur: {type: 'number', default: 100}
+      },
+
+      init: function () {
+        var data = this.data;
+        var el = this.el;
+
+        el.addEventListener(data.on, function () {
+          // Wait for fade to complete.
+          setTimeout(function () {
+            // Set image.
+            data.target.setAttribute('material', 'src', data.src);
+          }, data.dur);
+        });
+      },
+
+    });
+
+    // Cambia el atributo pero no refresca
+    /*AFRAME.registerComponent('cursor-listener', {
       init: function () {
 
         this.el.addEventListener('click', function (evt) {
-          var fondo = document.getElementById("sky");
-          fondo.setAttribute('src', 'images/azul.jpg');
+          var fondo = document.getElementById("roomAzul");
+          fondo.setAttribute('src', 'images/rosa.jpg');
           console.log(document.getElementById("sky").src);
         });
       }
-    });
+    });*/
+
     </script>
   </body>
 
